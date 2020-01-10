@@ -42,7 +42,7 @@ public class Player extends Thread {
             System.out.println(isGreen);
             while (true) {
                 if ((fromServer = in.readLine()) != null) {
-                    System.out.println(fromServer);
+                    //System.out.println(fromServer);
                     if (fromServer.equals("Bye.")) {
                         System.exit(0);
                     }
