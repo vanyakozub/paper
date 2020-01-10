@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game extends Application {
-    static int speed = 2;
+    static int speed = 1;
     static int width = 20;
     static int height = 20;
     static int cornersize = 25;
