@@ -3,13 +3,17 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class Input  extends Thread {
-
+public class Enemy  extends Thread {
+    public String fromUser = new String();
     private Socket socket;
-    public Input(Socket s){this.socket = s;}
+    private PrintWriter out;
+    public Enemy(Socket s) throws Exception {
+        this.socket = s;
+        this.out = new PrintWriter(socket.getOutputStream(),true);
+    }
 
     public void run(){
-        try {
+        /*try {
             while (true){
                 act();
             }
@@ -17,14 +21,14 @@ public class Input  extends Thread {
         }
         catch (Throwable t) {
 
-        }
+        }*/
 
     }
     public void act() throws Exception {
-        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+        out = new PrintWriter(socket.getOutputStream(), true);
 
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-        String fromUser;
+
         {
 
             fromUser = stdIn.readLine();
@@ -36,5 +40,8 @@ public class Input  extends Thread {
                 }
             }
         }
+    }
+    public void sendMesssage (String changes) {
+        out.println(changes);
     }
 }

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game extends Application {
-    static int speed = 1;
+    static int speed = 5;
     static int width = 20;
     static int height = 20;
     static int cornersize = 25;
@@ -25,26 +25,35 @@ public class Game extends Application {
     static List<Corner> snake = new ArrayList<Corner>();
     static Dir direction = Dir.left;
     static boolean gameOver = false;
+    public static Player player= new Player();
 
     public void begin(String[] args) {
         this.launch(args);
     }
+
+    public void firstInit(){
+        for(int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                field[i][j] = new Corner(i, j, 0);
+            }
+        }
+        field[0][0].val = 3;
+        field[0][1].val = 3;
+        field[1][0].val = 3;
+        field[1][1].val = 3;
+        field[width-1][height - 1].val = 1;
+        field[width-1][height - 2].val = 1;
+        field[width - 2][height - 1].val = 1;
+        field[(width - 2)][(height ) - 2].val = 1;
+    }
+
     public void start(Stage primaryStage) {
         try {
+
+            player.start();
+
             //newFood();
-            for(int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
-                    field[i][j] = new Corner(i, j, 0);
-                }
-            }
-            field[0][0].val = 3;
-            field[0][1].val = 3;
-            field[1][0].val = 3;
-            field[1][1].val = 3;
-            field[width-1][height - 1].val = 1;
-            field[width-1][height - 2].val = 1;
-            field[width - 2][height - 1].val = 1;
-            field[(width - 2)][(height ) - 2].val = 1;
+            firstInit();
             VBox root = new VBox();
             Canvas c = new Canvas(width * cornersize, height * cornersize);
             GraphicsContext gc = c.getGraphicsContext2D();
@@ -152,6 +161,7 @@ public class Game extends Application {
                 break;
 
         }
+        player.sendChanges(snake.get(0).toString());
 
         // self destroy
         for (int i = 1; i < snake.size(); i++) {
@@ -180,6 +190,7 @@ public class Game extends Application {
                 //fillField();
             }
         }
+        System.out.println(player.fromServer);
         for(Corner[] corn : field) {
             for(Corner c: corn){
                 switch (c.val) {
