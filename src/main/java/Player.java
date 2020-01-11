@@ -23,6 +23,46 @@ public class Player extends Thread {
     public boolean getIsGreen() {
         return isGreen;
     }
+    public int getArea() {
+        if(isGreen) {
+            return 1;
+        }
+        else {
+            return 3;
+        }
+    }
+    public int getEnemyArea() {
+        if(!isGreen) {
+            return 1;
+        }
+        else {
+            return 3;
+        }
+    }
+    public int getEnemyTail() {
+        if (!isGreen) {
+            return 2;
+        }
+        else {
+            return 4;
+        }
+    }
+    public int getTail() {
+        if (isGreen) {
+            return 2;
+        }
+        else {
+            return 4;
+        }
+    }
+    public int getHead() {
+        if (isGreen) {
+            return 5;
+        }
+        else {
+            return 6;
+        }
+    }
     public void begin() {
         try {
             kkSocket = new Socket(hostName, portNumber);
@@ -33,7 +73,7 @@ public class Player extends Thread {
             fromServer = in.readLine();
             fromServer = fromServer.trim();
             int playerNumber = Integer.parseInt(fromServer)%2;
-            if(fromServer.equals("0")) {
+            if(playerNumber == 0) {
                 isGreen = true;
             }
             else {

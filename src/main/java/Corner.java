@@ -8,4 +8,7 @@ public class Corner {
         this.y = y;
         this.val = val;
     }
+    public String toString() {
+        return new String(x + ";" + y + ";" + val);
+    }
 }

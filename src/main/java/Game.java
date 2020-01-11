@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game extends Application {
-    static int speed = 5;
+    static int speed = 2;
     static int width = 20;
     static int height = 20;
     static int cornersize = 25;
@@ -22,7 +22,8 @@ public class Game extends Application {
     public enum Dir {
         left, right, up, down
     }
-    static List<Corner> snake = new ArrayList<Corner>();
+    static List<Corner> tail = new ArrayList<Corner>();
+    static List<Corner> enemyTail = new ArrayList<Corner>();
     static Dir direction = Dir.left;
     static boolean gameOver = false;
     public static Player player= new Player();
@@ -45,6 +46,7 @@ public class Game extends Application {
         field[width-1][height - 2].val = 1;
         field[width - 2][height - 1].val = 1;
         field[(width - 2)][(height ) - 2].val = 1;
+
     }
 
     public void start(Stage primaryStage) {
@@ -76,7 +78,12 @@ public class Game extends Application {
                 }
 
             }.start();
-
+            if(player.getIsGreen()) {
+                direction = Dir.left;
+            }
+            else {
+                direction = Dir.right;
+            }
             Scene scene = new Scene(root, width * cornersize, height * cornersize);
 
             // control
@@ -96,12 +103,19 @@ public class Game extends Application {
 
             });
 
-            // add start snake parts
-            snake.add(new Corner(width - 1, height - 1, 2));
+            // add start tail parts
+            if(player.getIsGreen()) {
+                tail.add(new Corner(width - 1, height - 1, player.getTail()));
+                enemyTail.add(new Corner(0,0, player.getEnemyTail()));
+            }
+            else {
+                tail.add(new Corner(0,0,player.getTail()));
+                enemyTail.add(new Corner(width - 1, height - 1, player.getEnemyTail()));
+            }
 
 
             primaryStage.setScene(scene);
-            primaryStage.setTitle("Paper IO");
+            primaryStage.setTitle("Paper IO"+ "isGreen" + "=" + player.getIsGreen());
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,58 +128,58 @@ public class Game extends Application {
             gc.fillText("GAME OVER", 100, 250);
             return;
         }
-        if(field[snake.get(snake.size() - 1).y][snake.get(snake.size() - 1).x].val ==  1) {
-            for (int i = snake.size() - 1; i >= 1; i--) {
-                snake.get(i).x = snake.get(i - 1).x;
-                snake.get(i).y = snake.get(i - 1).y;
+        /*if(field[tail.get(tail.size() - 1).y][tail.get(tail.size() - 1).x].val ==  1) {
+            for (int i = tail.size() - 1; i >= 1; i--) {
+                tail.get(i).x = tail.get(i - 1).x;
+                tail.get(i).y = tail.get(i - 1).y;
             }
-        }
+        }*/
         Corner tmp;
 
         switch (direction) {
             case up:
-                tmp = new Corner(snake.get(0).x, snake.get(0).y, 5);
+                tmp = new Corner(tail.get(0).x, tail.get(0).y, player.getHead());
                 tmp.y--;
-                snake.add(0,tmp);
-                if (snake.get(0).y < 0) {
+                tail.add(0,tmp);
+                if (tail.get(0).y < 0) {
                     gameOver = true;
                 }
-                snake.get(1).val = 2;
+                tail.get(1).val = player.getTail();
                 break;
             case down:
-                tmp = new Corner(snake.get(0).x, snake.get(0).y, 5);
+                tmp = new Corner(tail.get(0).x, tail.get(0).y, player.getHead());
                 tmp.y++;
-                snake.add(0, tmp);
-                if (snake.get(0).y > height - 1) {
+                tail.add(0, tmp);
+                if (tail.get(0).y > height - 1) {
                     gameOver = true;
                 }
-                snake.get(1).val = 2;
+                tail.get(1).val = player.getTail();
                 break;
             case left:
-                tmp = new Corner(snake.get(0).x, snake.get(0).y, 5);
+                tmp = new Corner(tail.get(0).x, tail.get(0).y, player.getHead());
                 tmp.x--;
-                snake.add(0,tmp);
-                if (snake.get(0).x < 0) {
+                tail.add(0,tmp);
+                if (tail.get(0).x < 0) {
                     gameOver = true;
                 }
-                snake.get(1).val = 2;
+                tail.get(1).val = player.getTail();
                 break;
             case right:
-                tmp = new Corner(snake.get(0).x, snake.get(0).y, 5);
+                tmp = new Corner(tail.get(0).x, tail.get(0).y, player.getHead());
                 tmp.x++;
-                snake.add(0, tmp);
-                if (snake.get(0).x > width - 1) {
+                tail.add(0, tmp);
+                if (tail.get(0).x > width - 1) {
                     gameOver = true;
                 }
-                snake.get(1).val = 2;
+                tail.get(1).val = player.getTail();
                 break;
 
         }
-        player.sendChanges(snake.get(0).toString());
+        player.sendChanges(tail.get(0).toString());
 
         // self destroy
-        for (int i = 1; i < snake.size(); i++) {
-            if (snake.get(0).x == snake.get(i).x && snake.get(0).y == snake.get(i).y) {
+        for (int i = 1; i < tail.size(); i++) {
+            if (tail.get(0).x == tail.get(i).x && tail.get(0).y == tail.get(i).y) {
                 gameOver = true;
             }
         }
@@ -175,22 +189,48 @@ public class Game extends Application {
         // background
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, width * cornersize, height * cornersize);
-
-        // snake
-        for (Corner c : snake) {
-            if(field[c.x][c.y].val != 1) {
+        String[] answer;
+        String delimeter = ";";
+        System.out.println(player.fromServer);
+        answer = player.fromServer.split(delimeter);
+        if(answer.length == 3) {
+            enemyTail.add(0, new Corner(Integer.parseInt(answer[0]), Integer.parseInt(answer[1]), Integer.parseInt(answer[2])));
+            enemyTail.get(1).val = player.getEnemyTail();
+        }
+        // tail
+        for (Corner c : tail) {
+            if(field[c.x][c.y].val != player.getArea()) {
                 field[c.x][c.y].val = c.val;
             }
             /*gc.setFill(Color.LIGHTGREEN);
             gc.fillRect(c.x * cornersize, c.y * cornersize, cornersize - 1, cornersize - 1);
             gc.setFill(Color.LIGHTGREEN);
             gc.fillRect(c.x * cornersize, c.y * cornersize, cornersize - 2, cornersize - 2);*/
-            if(snake.size()>2 && field[snake.get(0).x][snake.get(0).y].val==1) {
-                anotherFilling();
-                //fillField();
+            if(tail.size()>2 && field[tail.get(0).x][tail.get(0).y].val==player.getArea()) {
+                if (player.getIsGreen()) {
+                    greenFilling();
+                }
+                else {
+                    redFilling();
+                }
             }
         }
-        System.out.println(player.fromServer);
+        for (Corner c :enemyTail) {
+            if(field[c.x][c.y].val != player.getEnemyArea()) {
+                field[c.x][c.y].val = c.val;
+            }
+            if(enemyTail.size()>2 && field[enemyTail.get(0).x][enemyTail.get(0).y].val==player.getEnemyArea()) {
+                if (player.getIsGreen()) {
+                    //greenFilling();
+                }
+                else {
+                    //redFilling();
+                }
+            }
+        }
+
+        //fillField();
+
         for(Corner[] corn : field) {
             for(Corner c: corn){
                 switch (c.val) {
@@ -216,16 +256,33 @@ public class Game extends Application {
                         gc.setFill(Color.YELLOW);
                         gc.fillRect(c.x * cornersize, c.y * cornersize, cornersize - 1, cornersize - 1);
                         break;
+                    case 6:
+                        gc.setFill(Color.ORANGE);
+                        gc.fillRect(c.x * cornersize, c.y * cornersize, cornersize - 1, cornersize - 1);
+                        break;
                 }
             }
         }
-        gc.setFill(Color.YELLOW);
-        gc.fillRect(snake.get(0).x * cornersize, snake.get(0).y*cornersize, cornersize -1, cornersize -1);
+        if(player.getIsGreen()) {
+            gc.setFill(Color.YELLOW);
+        }
+        else {
+            gc.setFill(Color.ORANGE);
+        }
+        gc.fillRect(tail.get(0).x * cornersize, tail.get(0).y*cornersize, cornersize -1, cornersize -1);
 
     }
-    public static void anotherFilling() {
-        for(Corner c: snake) {
-            for(int i = c.y + 1; i < height; i++) {
+
+    public static void greenFilling() {
+        for(Corner c: tail) {
+            boolean space = false;
+            for(int k = c.y + 1; k < height; k++) {
+                if(field[c.x][k].val == player.getTail() ||field[c.x][k].val ==player.getArea())
+                    space = true;
+
+            }
+            for(int i = c.y + 1; space && i < height; i++) {
+
                 if(field[c.x][i].val == 0) {
                     field[c.x][i].val = 1;
                 }
@@ -234,11 +291,36 @@ public class Game extends Application {
                 }
             }
         }
-        Corner tmp = new Corner(snake.get(0).x, snake.get(0).y, snake.get(0).val);
-        for (Corner c: snake) {
+        Corner tmp = new Corner(tail.get(0).x, tail.get(0).y, tail.get(0).val);
+        for (Corner c: tail) {
             field[c.x][c.y].val = 1;
         }
-        snake.clear();
-        snake.add(tmp);
+        tail.clear();
+        tail.add(tmp);
+    }
+    public static void redFilling() {
+        for(Corner c: tail) {
+            boolean space = false;
+            for(int k = c.y +1; k < height; k++) {
+                if(field[c.x][k].val == player.getTail() ||field[c.x][k].val ==player.getArea())
+                    space = true;
+
+            }
+            for(int i = c.y +1; space && i < height; i++) {
+
+                if(field[c.x][i].val == 0) {
+                    field[c.x][i].val = 3;
+                }
+                else if(field[c.x][i].val ==3 || field[c.x][i].val == 4) {
+                    break;
+                }
+            }
+        }
+        Corner tmp = new Corner(tail.get(0).x, tail.get(0).y, tail.get(0).val);
+        for (Corner c: tail) {
+            field[c.x][c.y].val = 3;
+        }
+        tail.clear();
+        tail.add(tmp);
     }
 }
