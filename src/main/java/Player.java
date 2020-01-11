@@ -2,7 +2,8 @@ import java.io.*;
 import java.net.*;
 public class Player extends Thread {
 
-    private String hostName = "localhost";//args[0];
+    private String hostName = "196.168.31.86";//args[0];
+
     private static boolean isGreen = false;
     private int portNumber = 9876;//Integer.parseInt(args[1]);
     public String fromServer = new String();
@@ -63,8 +64,13 @@ public class Player extends Thread {
             return 6;
         }
     }
+    public String getFromServer() {
+        return fromServer;
+    }
     public void begin() {
         try {
+            hostName = "192.168.31.86";
+            hostName = "localhost";
             kkSocket = new Socket(hostName, portNumber);
             BufferedReader in = new BufferedReader(new InputStreamReader(kkSocket.getInputStream()));
             //String fromServer;
@@ -79,7 +85,7 @@ public class Player extends Thread {
             else {
                 isGreen = false;
             }
-            System.out.println(isGreen);
+            System.out.println(fromServer);
             while (true) {
                 if ((fromServer = in.readLine()) != null) {
                     //System.out.println(fromServer);
