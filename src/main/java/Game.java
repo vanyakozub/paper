@@ -26,6 +26,8 @@ public class Game extends Application {
     static List<Corner> enemyTail = new ArrayList<Corner>();
     static Dir direction = Dir.left;
     static boolean gameOver = false;
+    static boolean isWin = false;
+    static String win = new String("win");
     public static Player player= new Player();
     static String ready = new String ("1");
     public void begin(String[] args) {
@@ -128,6 +130,10 @@ public class Game extends Application {
         }
     }
     public static void tick(GraphicsContext gc) {
+        if(player.fromServer.equals("win")) {
+            isWin = true;
+            gameOver = true;
+        }
         if (gameOver) {
             gc.setFill(Color.RED);
             gc.setFont(new Font("", 50));
@@ -148,6 +154,7 @@ public class Game extends Application {
                 tmp.y--;
                 tail.add(0,tmp);
                 if (tail.get(0).y < 0) {
+                    player.sendChanges(win);
                     gameOver = true;
                 }
                 tail.get(1).val = player.getTail();
@@ -157,6 +164,7 @@ public class Game extends Application {
                 tmp.y++;
                 tail.add(0, tmp);
                 if (tail.get(0).y > height - 1) {
+                    player.sendChanges(win);
                     gameOver = true;
                 }
                 tail.get(1).val = player.getTail();
@@ -166,6 +174,7 @@ public class Game extends Application {
                 tmp.x--;
                 tail.add(0,tmp);
                 if (tail.get(0).x < 0) {
+                    player.sendChanges(win);
                     gameOver = true;
                 }
                 tail.get(1).val = player.getTail();
@@ -175,6 +184,7 @@ public class Game extends Application {
                 tmp.x++;
                 tail.add(0, tmp);
                 if (tail.get(0).x > width - 1) {
+                    player.sendChanges(win);
                     gameOver = true;
                 }
                 tail.get(1).val = player.getTail();
@@ -186,6 +196,7 @@ public class Game extends Application {
         // self destroy
         for (int i = 1; i < tail.size(); i++) {
             if (tail.get(0).x == tail.get(i).x && tail.get(0).y == tail.get(i).y) {
+                player.sendChanges(win);
                 gameOver = true;
             }
         }
@@ -206,6 +217,7 @@ public class Game extends Application {
         Corner enemyHead = enemyTail.get(0);
         for (Corner c : tail) {
             if (c.equalsC(enemyHead)){
+                player.sendChanges(win);
                 gameOver = true;
             }
         }
