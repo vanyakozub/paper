@@ -70,7 +70,7 @@ public class Player extends Thread {
     public void begin() {
         try {
             hostName = "192.168.0.13";
-            //hostName = "localhost";
+            hostName = "localhost";
             kkSocket = new Socket(hostName, portNumber);
             BufferedReader in = new BufferedReader(new InputStreamReader(kkSocket.getInputStream()));
             //String fromServer;
@@ -97,13 +97,13 @@ public class Player extends Thread {
                 }
             }
 
-    }
+        }
         catch (UnknownHostException e) {System.out.println(e.fillInStackTrace());  }
         catch (IOException e) { System.out.println(e.fillInStackTrace()); }
         catch (Exception ex) {System.out.println(ex.fillInStackTrace()); }
-}
+    }
 
     public void sendChanges(String changes) {
         enemy.sendMesssage(changes);
-}
+    }
 }

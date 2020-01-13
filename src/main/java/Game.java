@@ -135,10 +135,18 @@ public class Game extends Application {
             gameOver = true;
         }
         if (gameOver) {
-            gc.setFill(Color.RED);
-            gc.setFont(new Font("", 50));
-            gc.fillText("GAME OVER", 100, 250);
-            return;
+            if(!isWin) {
+                gc.setFill(Color.RED);
+                gc.setFont(new Font("", 50));
+                gc.fillText("GAME OVER", 100, 250);
+                return;
+            }
+            else {
+                gc.setFill(Color.PALEGREEN);
+                gc.setFont(new Font("", 50));
+                gc.fillText("YOU WIN", 150, 250);
+                return;
+            }
         }
         /*if(field[tail.get(tail.size() - 1).y][tail.get(tail.size() - 1).x].val ==  1) {
             for (int i = tail.size() - 1; i >= 1; i--) {
@@ -327,40 +335,40 @@ public class Game extends Application {
                 field[tail.get(0).y][tail.get(0).y].val = 4;
             }
         }
-                for(int j = 0; j < width; j++) {
-                    for (int i = 0; i < height; i++){
+        for(int j = 0; j < width; j++) {
+            for (int i = 0; i < height; i++){
 
-                        if(field[i][j].val == color ||field[i][j].val ==areaC ) {
-                            if (t_t.x < 0) {
-                                t_t.x = field[i][j].x;
-                                t_t.y = field[i][j].y;
-                                t_t.val = field[i][j].val;
-                            }
-                            else {
-                                Corner tmp = field[i][j];
-                                if(field[i][j].val == areaC && t_t.val == field[i][j].val){
-                                    t_t.x = field[i][j].x;
-                                    t_t.y = field[i][j].y;
-                                    continue;
-                                }
-                                if(tmp.x - t_t.x < 2){
-                                    t_t.x = -1;
-                                    t_t.y = -1;
-                                }
-                                else {
-                                    for(int k = t_t.x; k < tmp.x; k++) {
-                                        field[k][j].val = color;
-                                    }
-                                    t_t.x = -1;
-                                    t_t.y = -1;
-                                }
-                            }
-                        }
-
+                if(field[i][j].val == color ||field[i][j].val ==areaC ) {
+                    if (t_t.x < 0) {
+                        t_t.x = field[i][j].x;
+                        t_t.y = field[i][j].y;
+                        t_t.val = field[i][j].val;
                     }
-                    t_t.x = -1;
-                    t_t.y = -1;
+                    else {
+                        Corner tmp = field[i][j];
+                        if(field[i][j].val == areaC && t_t.val == field[i][j].val){
+                            t_t.x = field[i][j].x;
+                            t_t.y = field[i][j].y;
+                            continue;
+                        }
+                        if(tmp.x - t_t.x < 2){
+                            t_t.x = -1;
+                            t_t.y = -1;
+                        }
+                        else {
+                            for(int k = t_t.x; k < tmp.x; k++) {
+                                field[k][j].val = color;
+                            }
+                            t_t.x = -1;
+                            t_t.y = -1;
+                        }
+                    }
                 }
+
+            }
+            t_t.x = -1;
+            t_t.y = -1;
+        }
 
         t_t.x = -1;
         t_t.y = -1;
