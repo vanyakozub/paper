@@ -69,8 +69,8 @@ public class Player extends Thread {
     }
     public void begin() {
         try {
-            hostName = "192.168.31.86";
-            hostName = "localhost";
+            hostName = "192.168.0.13";
+            //hostName = "localhost";
             kkSocket = new Socket(hostName, portNumber);
             BufferedReader in = new BufferedReader(new InputStreamReader(kkSocket.getInputStream()));
             //String fromServer;

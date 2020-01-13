@@ -11,4 +11,10 @@ public class Corner {
     public String toString() {
         return new String(x + ";" + y + ";" + val);
     }
+    public boolean equalsC(Corner c) {
+        if (this.x==c.x && this.y ==c.y) {
+            return true;
+        }
+        else return false;
+    }
 }

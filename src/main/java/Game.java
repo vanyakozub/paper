@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game extends Application {
-    static int speed = 1;
-    static int width = 40;
-    static int height = 40;
-    static int cornersize = 20;
+    static int speed = 2;
+    static int width = 20;
+    static int height = 20;
+    static int cornersize = 25;
     static Corner[][] field = new Corner[width][height];
     public enum Dir {
         left, right, up, down
@@ -27,7 +27,7 @@ public class Game extends Application {
     static Dir direction = Dir.left;
     static boolean gameOver = false;
     public static Player player= new Player();
-
+    static String ready = new String ("1");
     public void begin(String[] args) {
         this.launch(args);
     }
@@ -60,12 +60,13 @@ public class Game extends Application {
             Canvas c = new Canvas(width * cornersize, height * cornersize);
             GraphicsContext gc = c.getGraphicsContext2D();
             root.getChildren().add(c);
-            player.sendChanges("1");
+            player.sendChanges(ready);
             while (Integer.parseInt(player.fromServer) <1){
                 System.out.println(player.fromServer);
                 player.fromServer = player.getFromServer();
             }
-            player.sendChanges("1");
+
+            player.sendChanges(ready);
             new AnimationTimer() {
                 long lastTick = 0;
 
@@ -201,6 +202,12 @@ public class Game extends Application {
         if(answer.length == 3) {
             enemyTail.add(0, new Corner(Integer.parseInt(answer[0]), Integer.parseInt(answer[1]), Integer.parseInt(answer[2])));
             enemyTail.get(1).val = player.getEnemyTail();
+        }
+        Corner enemyHead = enemyTail.get(0);
+        for (Corner c : tail) {
+            if (c.equalsC(enemyHead)){
+                gameOver = true;
+            }
         }
         // tail
         for (Corner c : tail) {
