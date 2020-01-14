@@ -234,6 +234,7 @@ public class Game extends Application {
             if(field[c.x][c.y].val != player.getArea()) {
                 field[c.x][c.y].val = c.val;
             }
+            tail.get(0).val = player.getTail();
             /*gc.setFill(Color.LIGHTGREEN);
             gc.fillRect(c.x * cornersize, c.y * cornersize, cornersize - 1, cornersize - 1);
             gc.setFill(Color.LIGHTGREEN);
@@ -307,7 +308,13 @@ public class Game extends Application {
             gc.setFill(Color.ORANGE);
         }
         gc.fillRect(tail.get(0).x * cornersize, tail.get(0).y*cornersize, cornersize -1, cornersize -1);
-
+        if(player.getIsGreen()) {
+            gc.setFill(Color.ORANGE);
+        }
+        else {
+            gc.setFill(Color.YELLOW);
+        }
+        gc.fillRect(enemyTail.get(0).x*cornersize, enemyTail.get(0).y*cornersize, cornersize-1,cornersize-1);
     }
 
     public static void OlyasFillingRed(int color) {
@@ -337,7 +344,9 @@ public class Game extends Application {
         }
         for(int j = 0; j < width; j++) {
             for (int i = 0; i < height; i++){
-
+                if(field[i][j].val == headC ){
+                    field[i][j].val = color;
+                }
                 if(field[i][j].val == color ||field[i][j].val ==areaC ) {
                     if (t_t.x < 0) {
                         t_t.x = field[i][j].x;
