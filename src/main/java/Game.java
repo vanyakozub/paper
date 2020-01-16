@@ -448,104 +448,11 @@ public class Game extends Application {
             }
         }
     }
-    public static void greenFilling() {
-        for(Corner c: tail) {
-            boolean space = false;
-            for(int k = c.y + 1; k < height; k++) {
-                if(field[c.x][k].val == player.getTail() ||field[c.x][k].val ==player.getArea())
-                    space = true;
-
-            }
-            for(int i = c.y + 1; space && i < height; i++) {
-
-                if(field[c.x][i].val == 0) {
-                    field[c.x][i].val = 1;
-                }
-                else if(field[c.x][i].val ==1 || field[c.x][i].val == 2) {
-                    break;
-                }
-            }
-        }
-        Corner tmp = new Corner(tail.get(0).x, tail.get(0).y, tail.get(0).val);
-        for (Corner c: tail) {
-            field[c.x][c.y].val = 1;
-        }
-        tail.clear();
-        tail.add(tmp);
+    public int getSpeed (){
+        return speed;
     }
-    public static void redFilling() {
-        for(Corner c: tail) {
-            boolean space = false;
-            for(int k = c.y +1; k < height; k++) {
-                if(field[c.x][k].val == player.getTail() ||field[c.x][k].val ==player.getArea())
-                    space = true;
+    public int getRedHead(){
 
-            }
-            for(int i = c.y +1; space && i < height; i++) {
-
-                if(field[c.x][i].val == 0) {
-                    field[c.x][i].val = 3;
-                }
-                else if(field[c.x][i].val ==3 || field[c.x][i].val == 4) {
-                    break;
-                }
-            }
-        }
-        Corner tmp = new Corner(tail.get(0).x, tail.get(0).y, tail.get(0).val);
-        for (Corner c: tail) {
-            field[c.x][c.y].val = 3;
-        }
-        tail.clear();
-        tail.add(tmp);
-    }
-    public static void enemyRedFilling() {
-        for(Corner c: enemyTail) {
-            boolean space = false;
-            for(int k = c.y +1; k < height; k++) {
-                if(field[c.x][k].val == player.getTail() ||field[c.x][k].val ==player.getArea())
-                    space = true;
-
-            }
-            for(int i = c.y +1; space && i < height; i++) {
-
-                if(field[c.x][i].val == 0) {
-                    field[c.x][i].val = 3;
-                }
-                else if(field[c.x][i].val ==3 || field[c.x][i].val == 4) {
-                    break;
-                }
-            }
-        }
-        Corner tmp = new Corner(enemyTail.get(0).x, enemyTail.get(0).y, enemyTail.get(0).val);
-        for (Corner c: enemyTail) {
-            field[c.x][c.y].val = 3;
-        }
-        enemyTail.clear();
-        enemyTail.add(tmp);
-    }
-    public  static void enemyGreenFilling() {
-        for(Corner c: enemyTail) {
-            boolean space = false;
-            for(int k = c.y + 1; k < height; k++) {
-                if(field[c.x][k].val == player.getTail() ||field[c.x][k].val ==player.getArea())
-                    space = true;
-
-            }
-            for(int i = c.y + 1; space && i < height; i++) {
-
-                if(field[c.x][i].val == 0) {
-                    field[c.x][i].val = 1;
-                }
-                else if(field[c.x][i].val ==1 || field[c.x][i].val == 2) {
-                    break;
-                }
-            }
-        }
-        Corner tmp = new Corner(enemyTail.get(0).x, enemyTail.get(0).y, enemyTail.get(0).val);
-        for (Corner c: enemyTail) {
-            field[c.x][c.y].val = 1;
-        }
-        enemyTail.clear();
-        enemyTail.add(tmp);
+        return field[0][0].val;
     }
 }
